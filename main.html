@@ -37,66 +37,32 @@
   const stopButton = document.querySelector('#stop');
 
   //Your code goes here
-function voice(){
-	voices=speechSynthesis.getVoices();
-	voicesDropdown.innerHTML="";
+function populateVoices() {
+    voices = speechSynthesis.getVoices();
+    voicesDropdown.innerHTML = '';
 
-	if (voices.length===0) {
-		const option = document.createElement("option");
+    if (voices.length === 0) {
+        const option = document.createElement("option");
         option.textContent = "No voices available";
         voicesDropdown.appendChild(option);
         voicesDropdown.disabled = true;
-	} else {
-		voices.forEach = ((voices,i)=>{
-			 const option = document.createElement('option');
+    } else {
+        voices.forEach((voice, i) => {
+            const option = document.createElement('option');
             option.textContent = `${voice.name} (${voice.lang})`;
             option.value = i;
             voicesDropdown.appendChild(option);
-		});
-		voicesDropdown.disabled=false;
-	}
-}
-
-	voice();
-    if (speechSynthesis.onvoiceschanged !== undefined) {
-        speechSynthesis.onvoiceschanged = populateVoices;
-    }
-
-	function speak() {
-    if (!options[2].value.trim()) { 
-        alert('Please enter some text to speak!');
-        return;
-    }
-		
-	 if (speechSynthesis.speaking) {
-        speechSynthesis.cancel();
-    }
-		 msg.text = options[2].value; 
-    msg.rate = parseFloat(options[0].value);
-    msg.pitch = parseFloat(options[1].value); 
-
-    const selectedVoice = voices[voicesDropdown.value];
-    if (selectedVoice) {
-        msg.voice = selectedVoice;
-    }
-
-    speechSynthesis.speak(msg);
-	}
-
-	function stop() {
-    if (speechSynthesis.speaking) {
-        speechSynthesis.cancel();
+        });
+        voicesDropdown.disabled = false;
     }
 }
 
-	speakButton.addEventListener('click', speak);
-    stopButton.addEventListener('click', stop);
+// Initialize voices
+populateVoices();
+if (speechSynthesis.onvoiceschanged !== undefined) {
+    speechSynthesis.onvoiceschanged = populateVoices;
+}
 
-	voicesDropdown.addEventListener('change', () => {
-    if (speechSynthesis.speaking) {
-        speak(); 
-    }
-});
 </script>
 
 </body>
